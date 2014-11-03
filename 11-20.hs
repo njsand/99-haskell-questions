@@ -1,7 +1,7 @@
 
 -- p11
 -- This is RLE again, but don't put single items in their own tuple, just put 
--- them "by themself".  We need a new data type (lists are homogenous).
+-- them "by themselves".  We need a new data type (lists are homogenous).
 data Rle a = Mult Int a | Single a deriving (Eq, Ord, Show, Read)
 
 rle2 :: (Eq a) => [a] -> [Rle a]
@@ -39,13 +39,20 @@ repli (x:xs) n = (take n $ repeat x) ++ repli xs n
 
 -- p16
 -- drop every nth element from a list
-dropnth :: Int -> [a] -> [a]
-dropnth _ [] = []
-dropnth n xs = map snd $ filter (\x -> fst x `mod` n /= 0) $ zip [1..] xs
+dropNth :: Int -> [a] -> [a]
+dropNth _ [] = []
+dropNth n xs = map snd $ filter (\x -> fst x `mod` n /= 0) $ zip [1..] xs
 
+-- p17
+-- Split a list into 2 parts.  The length of the first part is given.
+-- (Should be O(n).)
+split :: [a] -> Int -> [[a]]
+split xs n = rec [] xs n
+  where rec xs ys 0 = [reverse xs, ys]
+        rec xs [] _ = [xs, []]
+        rec xs (y:ys) n = rec (y:xs) ys (n - 1)
 
 -- kindof cheaty:
-
 mymax (x:xs) = mymax' xs x
   where mymax' [] max = max
         mymax' (x:xs) max

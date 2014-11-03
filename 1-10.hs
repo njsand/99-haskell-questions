@@ -2,15 +2,14 @@
 
 -- Lists
 
-mylen :: [a] -> Int
-mylen [] = 0
-mylen (x:xs) = 1 + (mylen xs)
-
 -- p1
 -- last element of a list
 mylast :: [a] -> a
-mylast [x] = x
+mylast (x:[]) = x
 mylast (x:xs) = mylast xs
+
+-- Another way
+myLast2 = foldl1 (\_ y -> y)
 
 -- p2
 -- last but one element
@@ -25,21 +24,30 @@ myElementAt (x:xs) n = myElementAt xs (n - 1)
 
 -- p4
 -- length
+myLen :: [a] -> Int
+myLen [] = 0
+myLen (x:xs) = 1 + (myLen xs)
+
+-- accumulator edition
+myLen2 :: [a] -> Int
+myLen2 xs = rec 0 xs
+  where rec n [] = n
+        rec n (x:xs) = rec (1+n) xs
 
 -- p5
 -- reverse
-myreverse [] = []
-myreverse [x] = [x]
-myreverse (x:xs) = myreverse xs ++ [x]
+myReverse [] = []
+myReverse [x] = [x]
+myReverse (x:xs) = myReverse xs ++ [x]
 
 -- tail recursive.  faster.
-myreverseAcc :: [a] -> [a]
-myreverseAcc xs = rec xs []
+myReverseAcc :: [a] -> [a]
+myReverseAcc xs = rec xs []
   where rec [] acc = acc
         rec (x:xs) acc = rec xs (x:acc)
 
 -- p6
-palindrome x = x == myreverse x
+palindrome x = x == myReverse x
 
 -- p7
 -- flatten a list
