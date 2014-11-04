@@ -1,4 +1,6 @@
 
+
+
 -- p11
 -- This is RLE again, but don't put single items in their own tuple, just put 
 -- them "by themselves".  We need a new data type (lists are homogenous).
@@ -52,30 +54,18 @@ split xs n = rec [] xs n
         rec xs [] _ = [xs, []]
         rec xs (y:ys) n = rec (y:xs) ys (n - 1)
 
--- kindof cheaty:
-mymax (x:xs) = mymax' xs x
-  where mymax' [] max = max
-        mymax' (x:xs) max
-          | x > max = mymax' xs x
-          | otherwise = mymax' xs max
+-- Can also use the built-in: splitAt
+split2 :: [a] -> Int -> [[a]]
+split2 xs n = let (front, back) = splitAt n xs in [front, back]
 
-mymax2 [x] = x
-mymax2 (x:xs) =
-  let max = mymax2 xs
-  in if max > x then max else x
+-- p18
+-- Return a slice of a list. 1-based.  Positions outside the list bounds don't
+-- produce errors.
+slice :: [a] -> Int -> Int -> [a]
+slice xs i k = take (k - i + 1) $ drop (i - 1) xs
 
-data Light = Red | Green | Orange
-
-instance Show Light where
-  show Red = "red light"
-  show Green = "green light"
-  show Orange = "orange light"
-
-test x = case x of
-  1 -> "one"
-  2 -> "two"
-  3 -> "what"
-
--- test 1 = "one"
--- test 2 = "two"
--- test 3 = "what"
+-- p19
+-- Rotate a list N places to the left.  (N may be negative and is a rotation to the right).
+rotate :: [a] -> Int -> [a]
+rotate xs n = drop rot xs ++ take rot xs
+  where rot = n `mod` length xs
