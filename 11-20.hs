@@ -69,3 +69,11 @@ slice xs i k = take (k - i + 1) $ drop (i - 1) xs
 rotate :: [a] -> Int -> [a]
 rotate xs n = drop rot xs ++ take rot xs
   where rot = n `mod` length xs
+
+-- p20
+-- Remove the k'th item from a list.  (k starts at 1).
+removeAt :: [a] -> Int -> (a, [a])
+removeAt xs k = let (front, (b:back)) = splitAt (k - 1) xs in (b, front ++ back)
+
+
+
