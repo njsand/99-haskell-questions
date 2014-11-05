@@ -1,5 +1,4 @@
-
-
+-- Problems 11 to 20.
 
 -- p11
 -- This is RLE again, but don't put single items in their own tuple, just put 
@@ -74,6 +73,4 @@ rotate xs n = drop rot xs ++ take rot xs
 -- Remove the k'th item from a list.  (k starts at 1).
 removeAt :: [a] -> Int -> (a, [a])
 removeAt xs k = let (front, (b:back)) = splitAt (k - 1) xs in (b, front ++ back)
-
-
 
