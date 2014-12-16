@@ -52,12 +52,33 @@ addStep all@(range@(x1, x2):xs) y
   | inRange range y = all
   | y == x1 - 1 = (y, x2):xs
   | y < x1 = (y, y):all
-  | y == x2 + 1 = (x1, y):xs
+  | y == x2 + 1 = merge (x1, y) xs
   | y > x2 = range : (addStep xs y)
 
-inRange :: (Ord a) => (a, a) -> a -> Bool
-inRange (x, y) z = z >= x && z <= y
+merge :: (Ord a, Num a) => (a, a) -> [(a, a)] -> [(a, a)]
+merge (low, high) [] = [(low, high)]
+merge pair1@(low1, high1) rest@((low2, high2):xs)
+  | high1 + 1 == low2 = (low1, high2):xs
+  | otherwise = (pair1 : rest)
 
-index (Ord a, Num a) => [(a, a)] -> Int -> a
-index [] x = x
-index []
+-- Return true if LOW <= MIDDLE <= HIGH.
+inRange :: (Ord a) => (a, a) -> a -> Bool
+inRange (low, high) middle = middle >= low && middle <= high
+
+index :: (Ord a, Num a) => [(a, a)] -> a -> a
+index [] y = y
+index ((x1, x2):xs) y = 
+  if y < x1 
+  then y
+  else index xs (y + (x2 - x1 + 1))
+
+lotto :: Int -> Int -> IO [Int]
+lotto max n = recR n max []
+
+recR :: Int -> Int -> [(Int, Int)] -> IO [Int]
+recR 0 max _ = return []
+recR n max map = do
+  r <- getStdRandom $ randomR (1, max)
+  let result = index map r
+  rest <- recR (n - 1) (max - 1) $ addStep map result
+  return (result:rest)
