@@ -1,6 +1,9 @@
 import System.Random
 import Control.Monad(replicateM)
 
+import Data.List(sortBy)
+import Data.Function(on)
+
 -- Problems 21 to 30.
 
 -- p21
@@ -72,9 +75,6 @@ index ((x1, x2):xs) y =
   then y
   else index xs (y + (x2 - x1 + 1))
 
-lotto :: Int -> Int -> IO [Int]
-lotto max n = recR n max []
-
 recR :: Int -> Int -> [(Int, Int)] -> IO [Int]
 recR 0 max _ = return []
 recR n max map = do
@@ -82,3 +82,22 @@ recR n max map = do
   let result = index map r
   rest <- recR (n - 1) (max - 1) $ addStep map result
   return (result:rest)
+
+lotto :: Int -> Int -> IO [Int]
+lotto max n
+  | n > max = error "Numbers requested must be less than the upper bound"
+  | otherwise = recR n max []
+
+-- p25
+-- Generate a random permutation of the elements of a list.
+rnd_permu :: [a] -> IO [a]
+rnd_permu xs = do
+  indexes <- lotto (length xs) (length xs)
+  return $ (map snd . sortBy (compare `on` fst) . zip indexes) xs
+
+-- p26
+-- combinations :: Int -> [a] -> [[a]]
+-- combinatins 1 xs = xs
+-- combinations n (xs) = do 
+--   x <- xs
+--   x:(combinations (n - 1) xs)
