@@ -11,15 +11,6 @@ import Data.Function(on)
 insertAt :: a -> [a] -> Int -> [a]
 insertAt x xs n = let (front, back) = splitAt (n - 1) xs in front ++ (x:back)
 
--- insertAt' :: a -> [a] -> Int -> [a]
--- insertAt' x xs n = rec x 
-
--- NewType DiffList a = DiffList { getDiffList :: ([a] -> [a]) }
-
--- instance DiffList Monoid where
---   mempty = DiffList (\x -> x ++ [])
---   mappend x y = DiffList
-
 -- p22
 -- Create a list of integers in a given range.  Easy!
 range :: Int -> Int -> [Int]
@@ -100,5 +91,5 @@ rndPermu xs = do
 combinations :: Int -> [a] -> [[a]]
 combinations _ [] = []
 combinations 1 xs = map (:[]) xs
-combinations n (x:xs) = map (\y -> x:y) (combinations (n - 1) xs) ++ (combinations n xs)
+combinations n (x:xs) = map (x:) (combinations (n - 1) xs) ++ (combinations n xs)
 
