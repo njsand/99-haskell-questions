@@ -43,7 +43,6 @@ rndSelect2 xs n = do
 
 -- p24
 -- Lotto: Draw N different random numbers from the set 1..M. 
--- (So the numbers have to be different.)
 -- lotto :: Int -> Int -> [Int]
 
 -- First define a data structure that allows for a (mostly) compact
@@ -90,14 +89,16 @@ lotto max n
 
 -- p25
 -- Generate a random permutation of the elements of a list.
-rnd_permu :: [a] -> IO [a]
-rnd_permu xs = do
+rndPermu :: [a] -> IO [a]
+rndPermu xs = do
   indexes <- lotto (length xs) (length xs)
   return $ (map snd . sortBy (compare `on` fst) . zip indexes) xs
 
 -- p26
--- combinations :: Int -> [a] -> [[a]]
--- combinatins 1 xs = xs
--- combinations n (xs) = do 
---   x <- xs
---   x:(combinations (n - 1) xs)
+-- Generate the combinations of K distinct objects chosen from the N elements of
+-- a list.
+combinations :: Int -> [a] -> [[a]]
+combinations _ [] = []
+combinations 1 xs = map (:[]) xs
+combinations n (x:xs) = map (\y -> x:y) (combinations (n - 1) xs) ++ (combinations n xs)
+
